@@ -1,0 +1,19 @@
+name: build
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: |
+          yes | sdkmanager "platforms;android-35" "build-tools;35.0.0"
+          chmod +x gradlew
+          ./gradlew assembleRelease
+      - uses: actions/upload-artifact@v4
+        with:
+          name: talkies
+          path: app/build/outputs/apk/release/app-release.apk
